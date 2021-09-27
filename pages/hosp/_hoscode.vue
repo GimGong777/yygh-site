@@ -141,6 +141,9 @@
   import '~/assets/css/hospital.css'
 
   import hospApi from '@/api/hosp'
+  import cookie from "js-cookie"
+  import userInfoApi from "@/api/userInfo"
+
   export default {
     data() {
       return {
@@ -160,6 +163,21 @@
     },
 
     methods: {
+
+      schedule(depcode) {
+        let token = cookie.get('token')
+        if (!token) {
+          loginEvent.$emit('loginDialogEvent')
+          return
+        }
+        userInfoApi.getUserInfo().then(response => {
+          let authStatus = response.data.authStatus
+          if (!authStatus || authStatus !== 2) {
+            window.location.href = "/user"
+          }
+        })
+        window.location.href = '/hospital/schedule?hoscode=' + this.hospital.hoscode + "&depcode="+ depcode
+      },
 
       init() {
         // 根据医院标号查询详细信息

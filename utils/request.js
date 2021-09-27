@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
+import cookie from "js-cookie";
 
 // 创建axios实例
 const service = axios.create({
@@ -9,7 +10,12 @@ const service = axios.create({
 // http request 拦截器
 service.interceptors.request.use(
     config => {
-    // token 先不处理，后续使用时在完善
+      // token 先不处理，后续使用时在完善
+      // 判断cookie中是否有token
+      if (cookie.get('token')) {
+        // 将token放到cookie中
+        config.headers['token'] = cookie.get('token')
+      }
     return config
 },
   err => {
@@ -19,15 +25,21 @@ service.interceptors.request.use(
 // http response 拦截器
 service.interceptors.response.use(
     response => {
-        if (response.data.code !== 200) {
+        // 当状态码为208时。即未登录
+        if (response.data.code === 208) {
+          // 弹出登录框
+          loginEvent.$emit('loginDialogEvent')
+        } else {
+          if (response.data.code !== 200) {
             Message({
-                message: response.data.message,
-                type: 'error',
-                duration: 5 * 1000
+              message: response.data.message,
+              type: 'error',
+              duration: 5 * 1000
             })
             return Promise.reject(response.data)
-        } else {
+          } else {
             return response.data
+          }
         }
     },
     error => {

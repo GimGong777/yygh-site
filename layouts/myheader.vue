@@ -1,48 +1,49 @@
 <template>
-    <div class="header-container">
-        <div class="wrapper">
-        <!-- logo -->
-            <div class="left-wrapper v-link selected">
-                <img style="width: 50px" width="50" height="50" src="~assets/images/logo.png">
-                <span class="text">武汉市 预约挂号统一平台</span>
-            </div>
-        <!-- 搜索框 -->
-        <div class="search-wrapper">
-            <div class="hospital-search animation-show">
-                <el-autocomplete
-                    class="search-input small"
-                    prefix-icon="el-icon-search"
-                    v-model="state"
-                    :fetch-suggestions="querySearchAsync"
-                    placeholder="点击输入医院名称"
-                    @select="handleSelect"
-                    >
-                    <span slot="suffix" class="search-btn v-link highlight clickable selected">搜索 </span>
-                </el-autocomplete>
-            </div>
+  <div class="header-container">
+    <div class="wrapper">
+      <!-- logo -->
+      <div class="left-wrapper v-link selected">
+        <img style="width: 50px" width="50" height="50" src="~assets/images/logo.png">
+        <span class="text">武汉市 预约挂号统一平台</span>
+      </div>
+      <!-- 搜索框 -->
+      <div class="search-wrapper">
+        <div class="hospital-search animation-show">
+          <el-autocomplete
+            class="search-input small"
+            prefix-icon="el-icon-search"
+            v-model="state"
+            :fetch-suggestions="querySearchAsync"
+            placeholder="点击输入医院名称"
+            @select="handleSelect"
+          >
+            <span slot="suffix" class="search-btn v-link highlight clickable selected">搜索 </span>
+          </el-autocomplete>
         </div>
-        <!-- 右侧 -->
-        <!-- 右侧 -->
-        <div class="right-wrapper">
-          <span class="v-link clickable">帮助中心</span>
-          <span v-if="name == ''" class="v-link clickable" @click="showLogin()" id="loginDialog">登录/注册</span>
-          <el-dropdown v-if="name != ''" @command="loginMenu">
+      </div>
+      <!-- 右侧 -->
+      <!-- 右侧 -->
+      <div class="right-wrapper">
+        <span class="v-link clickable">帮助中心</span>
+        <span v-if="name === ''" class="v-link clickable" @click="showLogin()" id="loginDialog">登录/注册</span>
+        <el-dropdown v-if="name !== ''" @command="loginMenu">
                 <span class="el-dropdown-link">
                   {{ name }}
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
-            <el-dropdown-menu class="user-name-wrapper" slot="dropdown">
-              <el-dropdown-item command="/user">实名认证</el-dropdown-item>
-              <el-dropdown-item command="/order">挂号订单</el-dropdown-item>
-              <el-dropdown-item command="/patient">就诊人管理</el-dropdown-item>
-              <el-dropdown-item command="/logout" divided>退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-        </div>
+          <el-dropdown-menu class="user-name-wrapper" slot="dropdown">
+            <el-dropdown-item command="/user">实名认证</el-dropdown-item>
+            <el-dropdown-item command="/order">挂号订单</el-dropdown-item>
+            <el-dropdown-item command="/patient">就诊人管理</el-dropdown-item>
+            <el-dropdown-item command="/logout" divided>退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </div>
 
-        <!-- 登录弹出层 -->
-    <el-dialog :visible.sync="dialogUserFormVisible" v-if="dialogUserFormVisible" style="text-align: left;" top="50px" :append-to-body="true"  width="960px" @close="closeDialog()">
+    <!-- 登录弹出层 -->
+    <el-dialog :visible.sync="dialogUserFormVisible" v-if="dialogUserFormVisible" style="text-align: left;" top="50px"
+               :append-to-body="true" width="960px" @close="closeDialog()">
       <div class="container">
 
         <!-- 手机登录 #start -->
@@ -52,9 +53,13 @@
               <span class="title">{{ dialogAtrr.labelTips }}</span>
               <el-form>
                 <el-form-item>
-                  <el-input v-model="dialogAtrr.inputValue" :placeholder="dialogAtrr.placeholder" :maxlength="dialogAtrr.maxlength" class="input v-input">
-                    <span slot="suffix" class="sendText v-link" v-if="dialogAtrr.second > 0">{{ dialogAtrr.second }}s </span>
-                    <span slot="suffix" class="sendText v-link highlight clickable selected" v-if="dialogAtrr.second == 0" @click="getCodeFun()">重新发送 </span>
+                  <el-input v-model="dialogAtrr.inputValue" :placeholder="dialogAtrr.placeholder"
+                            :maxlength="dialogAtrr.maxlength" class="input v-input">
+                    <span slot="suffix" class="sendText v-link" v-if="dialogAtrr.second > 0">
+                      {{dialogAtrr.second }}s
+                    </span>
+                    <span slot="suffix" class="sendText v-link highlight clickable selected"
+                          v-if="dialogAtrr.second == 0" @click="getCodeFun()">重新发送 </span>
                   </el-input>
                 </el-form-item>
               </el-form>
@@ -69,14 +74,14 @@
         <!-- 手机登录 #end -->
 
         <!-- 微信登录 #start -->
-        <div class="operate-view"  v-if="dialogAtrr.showLoginType === 'weixin'" >
+        <div class="operate-view" v-if="dialogAtrr.showLoginType === 'weixin'">
           <div class="wrapper wechat" style="height: 400px">
             <div>
               <div id="weixinLogin"></div>
             </div>
             <div class="bottom wechat" style="margin-top: -80px;">
               <div class="phone-container">
-                <div class="phone-wrapper"  @click="phoneLogin()"><span
+                <div class="phone-wrapper" @click="phoneLogin()"><span
                   class="iconfont icon"></span></div>
                 <span class="third-text"> 手机短信验证码登录 </span></div>
             </div>
@@ -86,14 +91,15 @@
 
         <div class="info-wrapper">
           <div class="code-wrapper">
-            <div><img src="//img.114yygh.com/static/web/code_login_wechat.png" class="code-img">
-              <div class="code-text"><span class="iconfont icon"></span>微信扫一扫关注
+            <div>
+              <img src="//img.114yygh.com/static/web/code_login_wechat.png" class="code-img">
+              <div class="code-text">
+                <span class="iconfont icon"></span>微信扫一扫关注
               </div>
               <div class="code-text"> “快速预约挂号”</div>
             </div>
-            <div class="wechat-code-wrapper"><img
-              src="//img.114yygh.com/static/web/code_app.png"
-              class="code-img">
+            <div class="wechat-code-wrapper">
+              <img src="//img.114yygh.com/static/web/code_app.png" class="code-img" />
               <div class="code-text"> 扫一扫下载</div>
               <div class="code-text"> “预约挂号”APP</div>
             </div>
@@ -106,7 +112,7 @@
       </div>
       <div></div>
     </el-dialog>
-    </div>
+  </div>
 </template>
 <script>
 import cookie from 'js-cookie'
@@ -117,13 +123,11 @@ import hospitalApi from '@/api/hosp'
 
 const defaultDialogAtrr = {
   showLoginType: 'phone',          // 控制手机登录与微信登录切换
-
   labelTips: '手机号码',            // 输入框提示
-
   inputValue: '',                  // 输入框绑定对象
+
   placeholder: '请输入您的手机号',  // 输入框placeholder
   maxlength: 11,                   // 输入框长度控制
-
   loginBtn: '获取验证码',           // 登录按钮或获取验证码按钮文本
 
   sending: true,                   // 是否可以发送验证码
@@ -138,11 +142,9 @@ export default {
         code: '',
         openid: ''
       },
-
       dialogUserFormVisible: false,
       // 弹出层相关属性
-      dialogAtrr:defaultDialogAtrr,
-
+      dialogAtrr: defaultDialogAtrr,
       name: '' // 用户登录显示的名称
     }
   },
@@ -165,7 +167,7 @@ export default {
     // 绑定登录或获取验证码按钮
     btnClick() {
       // 判断是获取验证码还是登录
-      if(this.dialogAtrr.loginBtn == '获取验证码') {
+      if (this.dialogAtrr.loginBtn === '获取验证码') {
         this.userInfo.phone = this.dialogAtrr.inputValue
 
         // 获取验证码
@@ -181,22 +183,22 @@ export default {
       this.dialogUserFormVisible = true
 
       // 初始化登录层相关参数
-      this.dialogAtrr = { ...defaultDialogAtrr }
+      this.dialogAtrr = {...defaultDialogAtrr}
     },
 
     // 登录
     login() {
       this.userInfo.code = this.dialogAtrr.inputValue
 
-      if(this.dialogAtrr.loginBtn == '正在提交...') {
+      if (this.dialogAtrr.loginBtn === '正在提交...') {
         this.$message.error('重复提交')
         return;
       }
-      if (this.userInfo.code == '') {
+      if (this.userInfo.code === '') {
         this.$message.error('验证码必须输入')
         return;
       }
-      if (this.userInfo.code.length != 6) {
+      if (this.userInfo.code.length !== 6) {
         this.$message.error('验证码格式不正确')
         return;
       }
@@ -211,8 +213,8 @@ export default {
     },
 
     setCookies(name, token) {
-      cookie.set('token', token, { domain: 'localhost' })
-      cookie.set('name', name, { domain: 'localhost' })
+      cookie.set('token', token, {domain: 'localhost'})
+      cookie.set('name', name, {domain: 'localhost'})
       window.location.reload()
     },
 
@@ -246,7 +248,7 @@ export default {
 
     // 倒计时
     timeDown() {
-      if(this.clearSmsTime) {
+      if (this.clearSmsTime) {
         clearInterval(this.clearSmsTime);
       }
       this.dialogAtrr.second = 60;
@@ -264,7 +266,7 @@ export default {
 
     // 关闭登录层
     closeDialog() {
-      if(this.clearSmsTime) {
+      if (this.clearSmsTime) {
         clearInterval(this.clearSmsTime);
       }
     },
@@ -273,12 +275,12 @@ export default {
       let token = cookie.get('token')
       if (token) {
         this.name = cookie.get('name')
-        console.log(this.name)
+        // console.log(this.name)
       }
     },
 
     loginMenu(command) {
-      if('/logout' == command) {
+      if ('/logout' === command) {
         cookie.set('name', '', {domain: 'localhost'})
         cookie.set('token', '', {domain: 'localhost'})
 
