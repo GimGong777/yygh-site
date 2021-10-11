@@ -58,8 +58,8 @@
               <el-form-item prop="birthdate" label="出生日期：">
                 <el-date-picker
                   v-model="patient.birthdate"
-                  class="v-date-picker"
                   type="date"
+                  class="v-date-picker"
                   placeholder="选择日期">
                 </el-date-picker>
               </el-form-item>
@@ -200,9 +200,11 @@ export default {
       }
     }
   },
+
   created() {
     this.init();
   },
+
   mounted() {
     if (this.$route.query.id) {
       setTimeout(() => {
@@ -211,7 +213,9 @@ export default {
       }, 1000)
     }
   },
+
   methods: {
+
     init() {
       if (this.$route.query.id) {
         const id = this.$route.query.id

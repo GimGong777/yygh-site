@@ -32,19 +32,16 @@
             <div class="filter-wrapper">
               <span class="label">等级：</span>
               <div class="condition-wrapper">
-
                 <span v-for="(item,index) in hostypeList" :key="index"
                 class="item v-link clickable"
                 :class="hostypeActiveIndex == index ? 'selected' : ''"
                 @click="hostypeSelect(item.value, index)">
                   {{item.name}}
                 </span>
-
               </div>
             </div>
             <div class="filter-wrapper">
               <span class="label">地区：</span>
-
               <div class="condition-wrapper">
                 <span v-for="(item,index) in districtList" :key="index"
                 class="item v-link clickable"
@@ -53,7 +50,6 @@
                   {{item.name}}
                  </span>
               </div>
-
             </div>
           </div>
         </div>
@@ -161,7 +157,7 @@
   </div>
 </template>
 <script>
- 
+
   import hospApi from '@/api/hosp'
   import dictApi from '@/api/dict'
 

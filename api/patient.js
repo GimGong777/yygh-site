@@ -7,7 +7,7 @@ export default {
   findList() {
     return request({
       url: `${api_name}/auth/getAll`,
-      method: `get`
+      method: 'get'
     })
   },
 
